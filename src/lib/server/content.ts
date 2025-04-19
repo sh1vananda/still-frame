@@ -1,12 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-// Ensure this path points correctly to your reviews folder
-const postsDirectory = path.resolve(__dirname, '../../reviews');
+const postsDirectory = path.join(process.cwd(), 'src', 'reviews');
 
 export interface PostMetadata {
   title: string;

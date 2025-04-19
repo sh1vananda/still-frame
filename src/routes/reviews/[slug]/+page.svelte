@@ -12,7 +12,6 @@
 	$: if (data.slug && browser) {
         isLoading = true;
 		ContentComponent = null; loadError = null;
-        // Verify this path relative to this file location or use alias
         const importPath = `../../../reviews/${data.slug}.md`;
 		import(/* @vite-ignore */ importPath)
 			.then(module => {
@@ -21,7 +20,7 @@
             })
 			.catch(err => { loadError = err as Error; ContentComponent = null; })
             .finally(() => { isLoading = false; });
-	} else if (!browser) { isLoading = false; } // Handle SSR case
+	} else if (!browser) { isLoading = false; }
 </script>
 
 <svelte:head>

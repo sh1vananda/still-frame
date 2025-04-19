@@ -2,9 +2,9 @@
 title: "Stalker"
 director: "Andrei Tarkovsky"
 year: 1979
-date: "2023-10-28" # Publication date of the review (use YYYY-MM-DD)
-slug: "stalker-1979" # MUST match the filename base
-published: true # Set to false to hide
+date: "2023-10-28"
+slug: "stalker-1979"
+published: true
 summary: "A metaphysical journey into the enigmatic 'Zone', seeking a room where one's deepest desires are said to be granted."
 posterUrl: "/images/reviews/stalker-poster.jpeg"
 # featuredImageUrl: "/images/reviews/stalker-featured.jpg"

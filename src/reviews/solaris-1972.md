@@ -2,9 +2,9 @@
 title: "Solaris"
 director: "Andrei Tarkovsky"
 year: 1972
-date: "2023-10-28" # Publication date of the review (use YYYY-MM-DD)
-slug: "solaris-1972" # MUST match the filename base
-published: true # Set to false to hide
+date: "2023-10-28" 
+slug: "solaris-1972" 
+published: true 
 summary: "A psychologist is sent to a space station orbiting a mysterious planet to investigate strange occurrences among the crew."
 posterUrl: "/images/reviews/solaris-poster.jpeg"
 # featuredImageUrl: "/images/reviews/solaris-featured.jpg"

@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Lato:wght@300;400&display=swap');
 
 :root {
-  --bg-color: #fdfdfd; /* Slightly off-white */
+  --bg-color: #fdfdfd;
   --text-color: #333333;
   --text-secondary-color: #777777;
-  --accent-color: #999999; /* Simple grey accent */
+  --accent-color: #999999;
   --border-color: #eeeeee;
   --code-bg-color: #f8f8f8;
-  --header-bg: var(--bg-color); /* Solid */
-  --footer-bg: var(--bg-color); /* Solid */
+  --header-bg: var(--bg-color);
+  --footer-bg: var(--bg-color);
   --link-hover-color: #000000;
   --font-serif: 'Merriweather', serif;
   --font-sans: 'Lato', sans-serif;
@@ -44,7 +44,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   transition: background-color var(--theme-transition-duration) ease-out,
               color var(--theme-transition-duration) ease-out;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -84,7 +84,7 @@ blockquote {
   margin: 2em 0; padding-left: 1.5em;
   border-left: 2px solid var(--border-color);
   color: var(--text-secondary-color);
-  font-style: normal; /* Less stylized quote */
+  font-style: normal;
   font-size: 1rem;
   transition: color var(--theme-transition-duration) ease-out,
               border-color var(--theme-transition-duration) ease-out;
@@ -105,7 +105,6 @@ pre {
 }
 pre code { background-color: transparent; padding: 0; color: inherit; border: none; }
 
-/* Basic element transitions */
 .site-header, .site-footer, .navigation-indicator,
 .review-list .placeholder-image,
 .review-header .published-date {
@@ -114,7 +113,6 @@ pre code { background-color: transparent; padding: 0; color: inherit; border: no
                 border-color var(--theme-transition-duration) ease-out;
 }
 
-/* Minimal Image Hover */
 .prose :global(img),
 .prose :global(a[href*='/images/']) img,
 .featured-image {
@@ -124,12 +122,11 @@ pre code { background-color: transparent; padding: 0; color: inherit; border: no
 .prose :global(a[href*='/images/']):hover,
 .prose :global(img:hover),
 .featured-image:hover {
-    opacity: 0.85; /* Subtle opacity change on hover */
-    transform: none; /* No scale */
-    box-shadow: none; /* No shadow */
+    opacity: 0.85;
+    transform: none; 
+    box-shadow: none; 
 }
 
-/* Prose adjustments */
 .prose :global(h2):first-child,
 .prose :global(h3):first-child { margin-top: 0; }
 .prose :global(img) { margin: 2rem auto; }
