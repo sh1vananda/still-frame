@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Lato:wght@300;400&display=swap');
+
+:root {
+  --bg-color: #fdfdfd; /* Slightly off-white */
+  --text-color: #333333;
+  --text-secondary-color: #777777;
+  --accent-color: #999999; /* Simple grey accent */
+  --border-color: #eeeeee;
+  --code-bg-color: #f8f8f8;
+  --header-bg: var(--bg-color); /* Solid */
+  --footer-bg: var(--bg-color); /* Solid */
+  --link-hover-color: #000000;
+  --font-serif: 'Merriweather', serif;
+  --font-sans: 'Lato', sans-serif;
+  --theme-transition-duration: 0.2s;
+  --subtle-animation-duration: 0.3s;
+  --subtle-easing: ease-out;
+}
+
+html.dark {
+  --bg-color: #1e1e1e;
+  --text-color: #d0d0d0;
+  --text-secondary-color: #888888;
+  --accent-color: #aaaaaa;
+  --border-color: #333333;
+  --code-bg-color: #282828;
+  --header-bg: var(--bg-color);
+  --footer-bg: var(--bg-color);
+  --link-hover-color: #ffffff;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-serif);
+  margin: 0;
+  font-weight: 300;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--theme-transition-duration) ease-out,
+              color var(--theme-transition-duration) ease-out;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  line-height: 1.4;
+  color: var(--text-color);
+  transition: color var(--theme-transition-duration) ease-out;
+}
+h1 { font-size: 2rem; margin-top: 0; }
+h2 { font-size: 1.6rem; }
+h3 { font-size: 1.3rem; }
+
+p { margin-bottom: 1.5em; }
+
+a {
+  color: var(--text-color);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--theme-transition-duration) ease,
+              border-color 0.2s ease;
+}
+a:hover {
+  color: var(--link-hover-color);
+  border-bottom-color: var(--accent-color);
+}
+
+img {
+  max-width: 100%; height: auto; display: block;
+  margin: 2rem auto;
+  border-radius: 3px;
+}
+
+blockquote {
+  margin: 2em 0; padding-left: 1.5em;
+  border-left: 2px solid var(--border-color);
+  color: var(--text-secondary-color);
+  font-style: normal; /* Less stylized quote */
+  font-size: 1rem;
+  transition: color var(--theme-transition-duration) ease-out,
+              border-color var(--theme-transition-duration) ease-out;
+}
+
+code {
+  font-family: monospace; background-color: var(--code-bg-color); color: var(--text-color);
+  padding: 0.15em 0.3em; border-radius: 2px; font-size: 0.85em;
+  border: 1px solid var(--border-color);
+  transition: background-color var(--theme-transition-duration) ease-out,
+              color var(--theme-transition-duration) ease-out,
+              border-color var(--theme-transition-duration) ease-out;
+}
+pre {
+  background-color: var(--code-bg-color); padding: 1em; border-radius: 4px;
+  overflow-x: auto; transition: background-color var(--theme-transition-duration) ease-out, border-color var(--theme-transition-duration) ease-out;
+  border: 1px solid var(--border-color); box-shadow: none; margin: 2em 0; line-height: 1.5;
+}
+pre code { background-color: transparent; padding: 0; color: inherit; border: none; }
+
+/* Basic element transitions */
+.site-header, .site-footer, .navigation-indicator,
+.review-list .placeholder-image,
+.review-header .published-date {
+    transition: background-color var(--theme-transition-duration) ease-out,
+                color var(--theme-transition-duration) ease-out,
+                border-color var(--theme-transition-duration) ease-out;
+}
+
+/* Minimal Image Hover */
+.prose :global(img),
+.prose :global(a[href*='/images/']) img,
+.featured-image {
+    transition: opacity var(--subtle-animation-duration) var(--subtle-easing);
+}
+
+.prose :global(a[href*='/images/']):hover,
+.prose :global(img:hover),
+.featured-image:hover {
+    opacity: 0.85; /* Subtle opacity change on hover */
+    transform: none; /* No scale */
+    box-shadow: none; /* No shadow */
+}
+
+/* Prose adjustments */
+.prose :global(h2):first-child,
+.prose :global(h3):first-child { margin-top: 0; }
+.prose :global(img) { margin: 2rem auto; }

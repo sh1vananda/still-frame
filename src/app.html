@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" class="light">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		%sveltekit.head%
+
+		<script>
+			(function() {
+				const storageKey = 'theme'; const darkThemeClass = 'dark'; const lightThemeClass = 'light';
+				const applyTheme = (theme) => { const htmlEl = document.documentElement; htmlEl.classList.remove(darkThemeClass, lightThemeClass); htmlEl.classList.add(theme === 'dark' ? darkThemeClass : lightThemeClass); };
+				let preferredTheme; try { preferredTheme = localStorage.getItem(storageKey); } catch (e) {}
+				let theme = 'light';
+				if (preferredTheme === 'dark' || preferredTheme === 'light') { theme = preferredTheme; } else { if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { theme = 'dark'; } }
+				applyTheme(theme);
+			})();
+		</script>
+
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>
