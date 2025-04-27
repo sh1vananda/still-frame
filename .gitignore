@@ -1,5 +1,5 @@
 node_modules
-.env
+.env.development.local
 
 # Output
 .output
@@ -22,3 +22,5 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+.vercel

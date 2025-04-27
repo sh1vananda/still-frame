@@ -5,23 +5,37 @@
     import { browser } from '$app/environment';
     import { onMount } from 'svelte';
 
-    export let data: PageData; 
+    export let data: PageData;
 
     let renderedHtml: string = '';
     let currentSlug: string | null = null;
 
     function parseMarkdown(markdownString: string | undefined | null): string {
-        if (!browser) {
-            try { return marked.parse(markdownString || '', { async: false, breaks: true, gfm: true }) as string; }
-            catch { return "<p>Error rendering review content on server.</p>"; }
+        let outputHtml = '<p>Error: Could not render content.</p>';
+        if (typeof markdownString !== 'string' || !markdownString) {
+            console.warn("parseMarkdown received invalid input:", markdownString);
+            return "<p>Review content is empty or invalid.</p>";
         }
-        try { return marked.parse(markdownString || '', { async: false, breaks: true, gfm: true }) as string; }
-        catch (e) { console.error("Error parsing markdown:", e); return "<p>Error rendering review content.</p>"; }
+        try {
+            // --- MODIFICATION: Rely on GFM for paragraphs, remove breaks: true ---
+            outputHtml = marked.parse(markdownString, {
+                async: false,
+                gfm: true // GitHub Flavored Markdown should handle paragraphs correctly
+                // breaks: false // Explicitly false or just remove the line
+            }) as string;
+            // --- END MODIFICATION ---
+
+            console.log("Rendered HTML Output:", outputHtml); // <-- ADD THIS LOG
+
+        } catch (e) {
+            console.error("Error parsing markdown:", e);
+        }
+        return outputHtml;
     }
 
     $: if (data?.post && data.post.slug !== currentSlug) {
         currentSlug = data.post.slug;
-        renderedHtml = parseMarkdown(data.post.body); // Access body directly
+        renderedHtml = parseMarkdown(data.post.body);
     } else if (!data?.post && currentSlug !== null) {
         currentSlug = null;
         renderedHtml = "<p>Review data not available.</p>";
@@ -29,7 +43,9 @@
 
     onMount(() => {
         if (data?.post && !renderedHtml) {
-             renderedHtml = parseMarkdown(data.post.body); // Access body directly
+             renderedHtml = parseMarkdown(data.post.body);
+        } else if (!data?.post) {
+             renderedHtml = "<p>Review data not available on mount.</p>";
         }
     });
 </script>
