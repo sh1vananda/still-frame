@@ -1,17 +1,25 @@
-import { getPostBySlug } from '$lib/server/content';
+import { getPostBySlugDB } from '$lib/server/dbContent';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import type { PostMetadata } from '$lib/server/content'; 
+import type { Post } from '$lib/server/contentTypes';
 
-export const load: PageServerLoad = async ({ params }): Promise<{ metadata: PostMetadata, slug: string }> => {
+export const load: PageServerLoad = async ({ params, setHeaders }): Promise<{ post: Post }> => {
     const { slug } = params;
-    if (!slug) { throw error(404, 'Review not found (Invalid slug)'); }
 
-    const post = await getPostBySlug(slug); 
-    if (!post) { throw error(404, 'Review not found'); }
+    if (typeof slug !== 'string') {
+        throw error(404, 'Invalid slug parameter');
+    }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { content: _content, ...metadata } = post;
+    const post = await getPostBySlugDB(slug);
 
-    return { metadata, slug };
+    if (!post) {
+        throw error(404, 'Review not found or not published');
+    }
+
+    setHeaders({
+        'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=3600'
+    });
+
+    // Returns { post: Post }
+    return { post };
 };
