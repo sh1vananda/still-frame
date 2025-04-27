@@ -1,53 +1,39 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import { fade } from 'svelte/transition';
     import { marked } from 'marked';
     import { browser } from '$app/environment';
-    import { onMount } from 'svelte';
 
-    export let data: PageData;
+    export let data: PageData; // data structure is { post: Post }
 
-    let renderedHtml: string = '';
+    let parsedHtml: string = '';
     let currentSlug: string | null = null;
 
     function parseMarkdown(markdownString: string | undefined | null): string {
-        let outputHtml = '<p>Error: Could not render content.</p>';
-        if (typeof markdownString !== 'string' || !markdownString) {
-            console.warn("parseMarkdown received invalid input:", markdownString);
-            return "<p>Review content is empty or invalid.</p>";
-        }
+        if (!markdownString) return '<p>Loading...</p>';
         try {
-            // --- MODIFICATION: Rely on GFM for paragraphs, remove breaks: true ---
-            outputHtml = marked.parse(markdownString, {
-                async: false,
-                gfm: true // GitHub Flavored Markdown should handle paragraphs correctly
-                // breaks: false // Explicitly false or just remove the line
-            }) as string;
-            // --- END MODIFICATION ---
-
-            console.log("Rendered HTML Output:", outputHtml); // <-- ADD THIS LOG
-
+            return marked.parse(markdownString, { async: false, gfm: true, breaks: false }) as string;
         } catch (e) {
-            console.error("Error parsing markdown:", e);
+            console.error("Markdown parsing error:", e);
+            return "<p class='error-message'>Failed to render review content.</p>";
         }
-        return outputHtml;
     }
 
     $: if (data?.post && data.post.slug !== currentSlug) {
         currentSlug = data.post.slug;
-        renderedHtml = parseMarkdown(data.post.body);
+        if (browser) {
+            parsedHtml = parseMarkdown(data.post.body);
+        } else {
+            // Attempt basic SSR parse (less critical now with client parse)
+            parsedHtml = parseMarkdown(data.post.body);
+        }
     } else if (!data?.post && currentSlug !== null) {
         currentSlug = null;
-        renderedHtml = "<p>Review data not available.</p>";
+        parsedHtml = "<p class='error-message'>Review data unavailable.</p>";
+    } else if (data?.post && currentSlug === data.post.slug && !parsedHtml && browser){
+         // Catch case where component loads but reactive block didn't run yet
+         parsedHtml = parseMarkdown(data.post.body);
     }
 
-    onMount(() => {
-        if (data?.post && !renderedHtml) {
-             renderedHtml = parseMarkdown(data.post.body);
-        } else if (!data?.post) {
-             renderedHtml = "<p>Review data not available on mount.</p>";
-        }
-    });
 </script>
 
 <svelte:head>
@@ -67,8 +53,12 @@
             <h1>{data.post.title}</h1>
             <p class="subtitle">{data.post.director} ({data.post.year})</p>
             {#if data.post.featuredImageUrl}
-                <div class="featured-image-wrapper">
-                    <img src={data.post.featuredImageUrl} alt="Featured image for {data.post.title}" class="featured-image" />
+                <div class="featured-image-wrapper image-container-fixed">
+                    <img
+                        src={data.post.featuredImageUrl}
+                        alt="Featured image for {data.post.title}"
+                        class="featured-image"
+                     />
                 </div>
             {/if}
             <p class="published-date">
@@ -77,9 +67,9 @@
         </header>
 
         {#key data.post.slug}
-             <div class="prose" transition:fade={{duration: 300, delay: 50}}>
-                 {#if renderedHtml}
-                     {@html renderedHtml}
+             <div class="prose">
+                 {#if parsedHtml}
+                     {@html parsedHtml}
                  {:else}
                       <p>Loading content...</p>
                  {/if}
@@ -91,21 +81,30 @@
 </article>
 
 <style>
-    /* Styles remain the same */
     .review-header { text-align: center; margin-bottom: 4rem; }
     .review-header h1 { font-size: 2.5rem; font-weight: 300; margin-bottom: 0.75rem; }
     .review-header .subtitle { font-size: 1rem; color: var(--text-secondary-color); font-family: var(--font-sans); margin-bottom: 3rem; }
-    .featured-image-wrapper { margin: 0 auto 3rem auto; max-width: 100%; display: inline-block; }
-    .featured-image {
-        max-width: 100%; height: auto; display: block; border-radius: 3px; box-shadow: none;
-        transition: opacity var(--subtle-animation-duration) var(--subtle-easing);
+
+    .featured-image-wrapper {
+        margin: 0 auto 3rem auto;
+        width: 100%;
+        max-width: 700px;
+        max-height: 467px; /* Example for 3:2 at 700px wide */
+        aspect-ratio: 3 / 2; /* Enforce 3:2 Ratio */
+        /* Inherits shared styles from .image-container-fixed in app.css */
     }
-    .featured-image:hover { opacity: 0.85; }
+    /* .featured-image styles handled by global rule */
+
     .published-date { font-size: 0.85rem; color: var(--text-secondary-color); font-family: var(--font-sans); margin-top: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); transition: border-color var(--theme-transition-duration) ease-out; }
     .error-message { color: #c00; text-align: center; padding: 2rem; border: 1px solid var(--border-color); background-color: rgba(204, 0, 0, 0.05); transition: border-color var(--theme-transition-duration) ease-out, background-color var(--theme-transition-duration) ease-out; }
     .prose { font-size: 1.05rem; line-height: 1.85; min-height: 50px; }
-    .prose :global(h2) { margin-top: 2.5em; font-size: 1.5rem; }
+    .prose :global(h2) { margin-top: 2.5em; font-size: 1.5rem; font-weight: 300; }
     .prose :global(p) { margin-bottom: 1.5em; }
+    .prose :global(em) { font-style: italic; }
+    .prose :global(strong) { font-weight: 700; }
     .prose :global(img) { margin: 2.5rem auto; border-radius: 3px; display: block; max-width: 100%; transition: opacity 0.3s ease; }
     .prose :global(img:hover) { opacity: 0.85; }
+    .prose :global(blockquote) { margin: 2em 0; padding-left: 1.5em; border-left: 2px solid var(--border-color); color: var(--text-secondary-color); font-style: italic; font-size: 1rem; transition: color var(--theme-transition-duration) ease-out, border-color var(--theme-transition-duration) ease-out; }
+    .prose :global(ul), .prose :global(ol) { margin-bottom: 1.5em; padding-left: 2em; }
+    .prose :global(li) { margin-bottom: 0.5em; }
 </style>

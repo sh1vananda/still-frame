@@ -22,7 +22,7 @@
 					in:fade={{ duration: 400, delay: 60 * i, easing: cubicOut }}
 				>
 					<a href="/reviews/{post.slug}" class="review-link">
-						<div class="review-image-container">
+						<div class="review-image-container image-container-fixed">
 							{#if post.posterUrl}
 								<img src={post.posterUrl} alt="Poster for {post.title}" loading="lazy" />
 							{:else}
@@ -74,9 +74,15 @@
     transform: none; box-shadow: none;
   }
 
-  .review-image-container { flex-shrink: 0; width: 80px; }
-  .review-image-container img, .placeholder-image { width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; margin: 0; border-radius: 2px; }
-  .placeholder-image { background-color: var(--border-color); }
+  .review-image-container {
+    flex-shrink: 0;
+    width: 80px;
+    aspect-ratio: 2 / 3; /* Use aspect-ratio to derive height */
+    /* Inherits shared styles from .image-container-fixed */
+  }
+  /* Img styles handled by .image-container-fixed img */
+  .placeholder-image { width: 100%; height: 100%; }
+
   .review-text h2 { margin: 0 0 0.15rem 0; font-size: 1.3rem; font-weight: 400; }
   .review-text .director { font-size: 0.85rem; color: var(--text-secondary-color); font-family: var(--font-sans); margin-bottom: 0.6rem; }
   .review-text .summary { font-size: 0.95rem; margin-bottom: 0.8rem; line-height: 1.7; color: var(--text-secondary-color); }
